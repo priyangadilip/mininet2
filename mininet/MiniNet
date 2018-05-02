@@ -1,1 +1,13 @@
 
+package mininet;
+
+import exceptions.MenuOptionInvalid;
+
+public class MiniNet {
+public static void main(String args[]) throws MenuOptionInvalid
+{
+	Driver d=new Driver();
+	d.Start();
+	
+}
+}

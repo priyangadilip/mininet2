@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+</head>
+<body>
+<br><br><a href="CoupleForm.html"><button>Add Couple</button>
+<br><br><a href="Parent_Form.html"><button>Add Parent</button>
+<br><br><a href="ClassmateForm.html"><button>Add Classmate</button>
+<br><br><a href="ColleagueForm.html"><button>Add Colleague</button>
+</body>
+</html>

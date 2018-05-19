@@ -1,13 +1,710 @@
 
-package mininet;
+package javagui;
 
-import exceptions.MenuOptionInvalid;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
-public class MiniNet {
-public static void main(String args[]) throws MenuOptionInvalid
-{
-	Driver d=new Driver();
-	d.Start();
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import exceptions.NoAvailableException;
+import exceptions.NoParentException;
+import exceptions.NoSuchAgeException;
+import exceptions.NotToBeClassmatesException;
+import exceptions.NotToBeColleaguesException;
+import exceptions.NotToBeCoupledException;
+import exceptions.NotToBeFriendsException;
+import exceptions.TooYoungException;
+
+/**
+ * Servlet implementation class HomeServlet
+ */
+@WebServlet("/HomeServlet")
+public class HomeServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public HomeServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Statement stmt=null;
+		Connection con=null;
+		Scanner sc=new Scanner(System.in);
+		String home_Page="Home.jsp";
+		
+			try{  
+				Class.forName("com.mysql.cj.jdbc.Driver");  
+				 con=DriverManager.getConnection(  
+				"jdbc:mysql://localhost:3306/FirstConnection","root","Goong@123");  
+				//here FirstConnection is database name, root is username and password  
+				 stmt=con.createStatement(); 
+				 System.out.println("Successfull DB connection");
+				 
+				 }
+			catch(Exception e){ System.out.println(e);} 
+	//ADD PERSON BUTTON FUNCTIONALITY		
+		
+		if("Add Person".equals(request.getParameter("Add Person")))
+		{
+			
+			List<String> names=new ArrayList<String>();
+			List<Integer> age1=new ArrayList<Integer>();
+			System.out.println("Enter First name");
+			String f_name=sc.next();
+			names.add(f_name);
+			System.out.println("Enter Last name");
+			String l_name=sc.next();
+			names.add(l_name);
+			System.out.println("Enter your status");
+			String status=sc.next();
+			names.add(status);
+			System.out.println();
+			System.out.println("Enter your age");
+			int age=sc.nextInt();
+			if(age<0||age>150)
+			{
+				 
+				
+					try {
+						throw new NoSuchAgeException("No Such Age Exception");
+						
+					} catch (NoSuchAgeException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					request.getRequestDispatcher("Home.jsp").forward(request, response);
+				
+			}
+			else {
+			age1.add(age);
+			
+			System.out.println("Enter your SEX");
+			String sex=sc.next();
+			names.add(sex);
+			System.out.println("Enter the state you currently live in");
+			String state=sc.next();
+			names.add(state);
+			
+			}
+			String first_name=names.get(0);
+			System.out.println(first_name);
+			String Last_name=names.get(1);
+			String Status=names.get(2);
+			int Age=age1.get(0);
+			String Sex=names.get(3);
+			String State=names.get(4);
+			
+			try {
+				String query= "insert into add_person (fname, lname, CurrentStatus, age, sex,state)"+"values(?,?,?,?,?,?)";
+				PreparedStatement preparedStmt = con.prepareStatement(query);
+				preparedStmt.setString (1,first_name );
+				preparedStmt.setString (2,Last_name );
+				preparedStmt.setString (3,Status );
+				preparedStmt.setInt (4,Age );
+				preparedStmt.setString (5,Sex );
+				preparedStmt.setString (6,State );
+				
+				
+				//stmt.executeUpdate("insert into add_details"+"values(first_name,Last_name,status,age,sex,state,status)");
+				 preparedStmt.execute();
+				System.out.println("Successfully inserted");
+				request.getRequestDispatcher("Home.jsp").forward(request, response);
+			} catch (SQLException e) {
+				
+				
+				
+			}}
+			else if("Display Profile".equals(request.getParameter("Display Profile")))
+			{
+				ResultSet rs=null;
+				System.out.println("Enter the Persons first name for profile to be displayed");
+				String name=sc.next();
+			String query="select * from add_person where fname = ?";
+			try {
+				PreparedStatement preparedStmt = con.prepareStatement(query);
+				preparedStmt.setString(1, name);
+				rs = preparedStmt.executeQuery();
+			} catch (SQLException e2) {
+				
+				
+			}
+			
+			try {
+				rs = stmt.executeQuery(query);
+			} catch (SQLException e1) {
+				
+			}
+			try {
+				while(rs.next())
+				{
+					String F_Name=rs.getString("fname");
+					String L_Name=rs.getString("lname");
+					String Status1=rs.getString("status");
+					int Age1=rs.getInt("age");
+					String Sex1=rs.getString("sex");
+					String State1=rs.getString("state");
+					
+					 System.out.print("Firts Name: " + F_Name);
+			         System.out.print(", Last Name: " + L_Name);
+			         System.out.print(", Status: " + Status1);
+			         System.out.println(", Age: " + Age1);
+			         System.out.println(", Sex: " + Sex1);
+			         System.out.println(", State: " + State1);
+				}
+			} catch (SQLException e) {
+				
+			}
+			
+			}
+		
+		// ADD FRIEND BUTTON FUNCTIONALITY
+
+			else if("Add Friend".equals(request.getParameter("Add Friend")))
+			{
+				int age1 =0;
+				int age2 = 0;
+				ResultSet rs=null;
+				ResultSet rs1=null;
+				System.out.println("Enter first persons first name");
+				String person1=sc.next();
+				System.out.println("Enter second persons first name");
+				String person2=sc.next();
+				String query="select age from add_person where fname = ?";
+				String query1="select age from add_person where fname = ?";
+				try {
+					PreparedStatement preparedStmt = con.prepareStatement(query);
+					preparedStmt.setString(1, person1);
+					rs = preparedStmt.executeQuery();
+					
+				}
+				catch (SQLException e2) {
+					
+				}
+				try {
+					rs = stmt.executeQuery(query);
+					
+				}
+				catch (SQLException e2) {
+					
+				}
+					 try {
+						 while(rs.next()) {
+						age1=rs.getInt("age");
+						 }
+						
+					} catch (SQLException e) {
+						
+					}
+					 System.out.println(age1);
+					 try {
+							PreparedStatement preparedStmt1 = con.prepareStatement(query1);
+							preparedStmt1.setString(1, person2);
+							rs1 = preparedStmt1.executeQuery();
+							
+						}
+						catch (SQLException e2) {
+							
+						}
+						try {
+							rs1 = stmt.executeQuery(query1);
+							
+						}
+						catch (SQLException e2) {
+							
+						}
+							 try {
+								 while(rs1.next()) {
+								age2=rs1.getInt("age");
+								 }
+								
+							} catch (SQLException e) {
+								
+							}
+					 System.out.println(age2);
+					
+					 
+					 if(age1<=2||age2<=2)
+						{
+								System.out.println(age2);
+								try {
+									throw new TooYoungException("Too Young to be friends");
+								} catch (TooYoungException e) {
+									e.printStackTrace();
+								}
+						
+						}
+							else if(((age1<=16 && age2>=17)||(age1>=17 && age2<=16)))
+							{
+								try {
+									throw new NotToBeFriendsException("One is an adult therfore Should not be Friends !");
+								} catch (NotToBeFriendsException e) {
+									e.printStackTrace();
+								}
+							}
+							else if(age1<=16&&age2<=16)
+							{
+								if((Math.abs(age1-age2)>3))
+								{
+									try {
+										throw new NotToBeFriendsException("Age difference is more than 3 therfore Should not be Friends !");
+									} catch (NotToBeFriendsException e) {
+										e.printStackTrace();
+									}
+								}
+							}
+							else
+							{
+								String query2="insert into friends(friend1,friend2)"+" values(?,?)";
+								
+								
+								try {
+									PreparedStatement preparedStmt = con.prepareStatement(query2);
+									preparedStmt.setString (1,person1 );
+									preparedStmt.setString (2,person2 );
+									 preparedStmt.execute();
+								} catch (SQLException e) {
+									
+								}
+							}
+				}
+		
+		// ADD RELATION --> ADD COUPLE BUTTON FUNCTIONALITY
+		
+			else	if("Add Couple".equals(request.getParameter("Add Couple")))
+		{
+				ResultSet rs=null;
+				ResultSet rs1=null;
+				int age1=0;
+				int age2=0;
+String Couple1_name=request.getParameter("Couple1_fname");
+String Couple2_name=request.getParameter("Couple2_fname");
+String query="select age from add_person where fname = ?";
+String query1="select age from add_person where fname = ?";
+try {
+	PreparedStatement preparedStmt = con.prepareStatement(query);
+	preparedStmt.setString(1, Couple1_name);
+	rs = preparedStmt.executeQuery();
 	
 }
+catch (SQLException e2) {
+	
 }
+try {
+	rs = stmt.executeQuery(query);
+	
+}
+catch (SQLException e2) {
+	
+}
+	 try {
+		 while(rs.next()) {
+		age1=rs.getInt("age");
+		 }
+		
+	} catch (SQLException e) {
+		
+	}
+	// System.out.println(age1);
+	 try {
+			PreparedStatement preparedStmt1 = con.prepareStatement(query1);
+			preparedStmt1.setString(1, Couple2_name);
+			rs1 = preparedStmt1.executeQuery();
+			
+		}
+		catch (SQLException e2) {
+			
+		}
+		try {
+			rs1 = stmt.executeQuery(query1);
+			
+		}
+		catch (SQLException e2) {
+				}
+			 try {
+				 while(rs1.next()) {
+				age2=rs1.getInt("age");
+				 }
+				
+			} catch (SQLException e) {
+				
+			}
+	// System.out.println(age2);
+	 if(age1<=16||age2<=16)
+	 {
+		 try {
+				throw new NotToBeCoupledException("One of the person is not an adult and cannot be a couple !!");
+			} catch (NotToBeCoupledException e) {
+				e.printStackTrace();
+			}
+	 }
+	 else {
+	 String query2="select count(*) from couple where Adult1 = ?";
+	 String query3="select count(*) from couple where Adult2 = ?";
+	 int count=0;
+	 int count1=0;
+		try {
+			PreparedStatement preparedStmt = con.prepareStatement(query2);
+			preparedStmt.setString(1, Couple1_name);
+			rs = preparedStmt.executeQuery();
+			
+		}
+		catch (SQLException e2) {
+			
+		}
+		try {
+			rs = stmt.executeQuery(query2);
+			
+		}
+		catch (SQLException e2) {
+			
+		}
+			 try {
+				 while(rs.next()) {
+				count=rs.getInt(1);
+				 }
+				
+			} catch (SQLException e) {
+				
+			}
+			 System.out.println(count);
+			 try {
+					PreparedStatement preparedStmt1 = con.prepareStatement(query3);
+					preparedStmt1.setString(1, Couple2_name);
+					rs1 = preparedStmt1.executeQuery();
+					
+				}
+				catch (SQLException e2) {
+					
+				}
+				try {
+					rs1 = stmt.executeQuery(query3);
+					
+				}
+				catch (SQLException e2) {
+					
+				}
+					 try {
+						 while(rs1.next()) {
+						count1=rs.getInt(1);
+						 }
+						
+					} catch (SQLException e) {
+						
+					}
+			 System.out.println(count1);
+			 if(count>=1||count1>=1)
+			 {
+				 try {
+						throw new NoAvailableException("One of the person is already coupled with someone else !!");
+					} catch (NoAvailableException e) {
+						e.printStackTrace();
+					}
+			
+	 }
+			 else
+				{
+					String query4="insert into couple(Adult1,Adult2)"+" values(?,?)";
+					
+					
+					try {
+						PreparedStatement preparedStmt = con.prepareStatement(query4);
+						preparedStmt.setString (1, Couple1_name);
+						preparedStmt.setString (2,Couple2_name );
+						 preparedStmt.execute();
+						 System.out.println(Couple1_name +" " + "and" + " " + Couple2_name + "are now couple");
+					} catch (SQLException e) {
+						
+					}
+				}
+			 }}
+			else if("Add Parent".equals(request.getParameter("Add Parent")))
+			{
+				String Childname=request.getParameter("Child_fname");
+				String Fathername=request.getParameter("Father_fname");
+				String Mothername=request.getParameter("Mother_fname");
+				String query="select count(*) from couple where Adult1=?";
+				String query1="select count(*) from couple where Adult2=?";
+				 int count=0;
+				 int count1=0;
+				 ResultSet rs=null;
+				 ResultSet rs1=null;
+					try {
+						PreparedStatement preparedStmt = con.prepareStatement(query);
+						preparedStmt.setString(1, Fathername);
+						rs= preparedStmt.executeQuery();
+						
+					}
+					catch (SQLException e2) {
+						
+					}
+					try {
+						rs = stmt.executeQuery(query);
+						
+					}
+					catch (SQLException e2) {
+						
+					}
+						 try {
+							 while(rs.next()) {
+							count=rs.getInt(1);
+							 }
+							
+						} catch (SQLException e) {
+							
+						}
+						 System.out.println(count);
+						 try {
+								PreparedStatement preparedStmt1 = con.prepareStatement(query1);
+								preparedStmt1.setString(1, Mothername);
+								rs1 = preparedStmt1.executeQuery();
+								
+							}
+							catch (SQLException e2) {
+								
+							}
+							try {
+								rs1 = stmt.executeQuery(query1);
+								
+							}
+							catch (SQLException e2) {
+								
+							}
+								 try {
+									 while(rs1.next()) {
+									count1=rs1.getInt(1);
+									 }
+									
+								} catch (SQLException e) {
+									
+								}
+								 if(count<1||count1<1)
+								 {
+									 try {
+											throw new NoParentException(Childname+" "+ "has either one or no parent!!");
+										} catch (NoParentException e) {
+											e.printStackTrace();
+										}
+								
+						 }
+								 else
+									{
+										String query4="insert into Parent(Child_name,Father_name,Mother_name)"+" values(?,?,?)";
+										
+										
+										try {
+											PreparedStatement preparedStmt = con.prepareStatement(query4);
+											preparedStmt.setString (1, Childname);
+											preparedStmt.setString (2,Fathername );
+											preparedStmt.setString (3,Mothername );
+											 preparedStmt.execute();
+											 System.out.println("Parents added successfully !!");
+										} catch (SQLException e) {
+											
+										}
+									}
+								 }
+			else if("Add Classmate".equals(request.getParameter("Add Classmate")))
+			{
+				ResultSet rs=null;
+				ResultSet rs1=null;
+				int age=0;
+				int age1=0;
+				String classmate1=request.getParameter("Classmate1");
+				String classmate2=request.getParameter("Classmate2");
+				String query="select age from add_person where fname=?";
+				String query1="select age from add_person where fname=?";
+				try {
+					PreparedStatement preparedStmt = con.prepareStatement(query);
+					preparedStmt.setString(1, classmate1);
+					rs= preparedStmt.executeQuery();
+					
+				}
+				catch (SQLException e2) {
+					
+				}
+				try {
+					rs = stmt.executeQuery(query);
+					
+				}
+				catch (SQLException e2) {
+					
+				}
+					 try {
+						 while(rs.next()) {
+						age=rs.getInt("age");
+						 }
+						
+					} catch (SQLException e) {
+						
+					}
+					 try {
+							PreparedStatement preparedStmt1 = con.prepareStatement(query1);
+							preparedStmt1.setString(1, classmate2);
+							rs1 = preparedStmt1.executeQuery();
+							
+						}
+						catch (SQLException e2) {
+							
+						}
+						try {
+							rs1 = stmt.executeQuery(query1);
+							
+						}
+						catch (SQLException e2) {
+							
+						}
+							 try {
+								 while(rs1.next()) {
+								age1=rs1.getInt("age");
+								 }
+								
+							} catch (SQLException e) {
+								
+							}
+							 if(age<=2||age1<=2)
+							 {
+								 try {
+										throw new NotToBeClassmatesException("One of the person is a young child and therfore cannot be classmates !!");
+									} catch (NotToBeClassmatesException e) {
+										e.printStackTrace();
+									}
+							 }
+							 else
+							 {
+								 String query4="insert into classmate(classmate1,classmate2)"+" values(?,?)";
+									
+									
+									try {
+										PreparedStatement preparedStmt = con.prepareStatement(query4);
+										preparedStmt.setString (1, classmate1);
+										preparedStmt.setString (2,classmate2 );
+										 preparedStmt.execute();
+										 System.out.println("classmates added successfully !!");
+									} catch (SQLException e) {
+										
+									}
+							 }
+				
+			}
+			
+			else if("Add Colleague".equals(request.getParameter("Add Colleague")))
+			{
+				ResultSet rs=null;
+				ResultSet rs1=null;
+				int age=0;
+				int age1=0;
+				String colleague1=request.getParameter("Colleague1");
+				String colleague2=request.getParameter("Colleague2");
+				String query="select age from add_person where fname=?";
+				String query1="select age from add_person where fname=?";
+				try {
+					PreparedStatement preparedStmt = con.prepareStatement(query);
+					preparedStmt.setString(1, colleague1);
+					rs= preparedStmt.executeQuery();
+					
+				}
+				catch (SQLException e2) {
+					
+				}
+				try {
+					rs = stmt.executeQuery(query);
+					
+				}
+				catch (SQLException e2) {
+					
+				}
+					 try {
+						 while(rs.next()) {
+						age=rs.getInt("age");
+						 }
+						
+					} catch (SQLException e) {
+						
+					}
+					 try {
+							PreparedStatement preparedStmt1 = con.prepareStatement(query1);
+							preparedStmt1.setString(1, colleague2);
+							rs1 = preparedStmt1.executeQuery();
+							
+						}
+						catch (SQLException e2) {
+							
+						}
+						try {
+							rs1 = stmt.executeQuery(query1);
+							
+						}
+						catch (SQLException e2) {
+							
+						}
+							 try {
+								 while(rs1.next()) {
+								age1=rs1.getInt("age");
+								 }
+								
+							} catch (SQLException e) {
+								
+							}
+							 if(age<=16||age1<=16)
+							 {
+								 try {
+										throw new NotToBeColleaguesException("One of the person is a child and therfore cannot be classmates !!");
+									} catch (NotToBeColleaguesException e) {
+										e.printStackTrace();
+									}
+							 }
+							 else
+							 {
+								 String query4="insert into colleague(colleague1,colleague2)"+" values(?,?)";
+									
+									
+									try {
+										PreparedStatement preparedStmt = con.prepareStatement(query4);
+										preparedStmt.setString (1, colleague1);
+										preparedStmt.setString (2,colleague2 );
+										 preparedStmt.execute();
+										 System.out.println("colleagues added successfully !!");
+									} catch (SQLException e) {
+										
+									}
+							 }
+			}
+				
+				}
+				
+			
+		
+	}
+		
+	
+
+
+

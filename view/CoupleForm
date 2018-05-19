@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Couple Details Form</title>
+</head>
+<body>
+<form action="HomeServlet" method="Post">
+<br><br>Enter the first name of the Partner1(Male):<input type="text" name="Couple1_fname">
+<br><br>Enter the first name of the Partner2(Female):<input type="text" name="Couple2_fname">
+<br><br><input type="submit" name="Add Couple" value="Add Couple">
+</form>
+</body>
+</html>

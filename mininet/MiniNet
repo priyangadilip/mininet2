@@ -1,6 +1,4 @@
-
 package javagui;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,14 +9,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import exceptions.NoAvailableException;
 import exceptions.NoParentException;
 import exceptions.NoSuchAgeException;
@@ -66,8 +62,7 @@ public class HomeServlet extends HttpServlet {
 				"jdbc:mysql://localhost:3306/FirstConnection","root","Goong@123");  
 				//here FirstConnection is database name, root is username and password  
 				 stmt=con.createStatement(); 
-				 System.out.println("Successfull DB connection");
-				 
+				 System.out.println("Successfull DB connection");	 
 				 }
 			catch(Exception e){ System.out.println(e);} 
 	//ADD PERSON BUTTON FUNCTIONALITY		
@@ -131,16 +126,11 @@ public class HomeServlet extends HttpServlet {
 				preparedStmt.setInt (4,Age );
 				preparedStmt.setString (5,Sex );
 				preparedStmt.setString (6,State );
-				
-				
-				//stmt.executeUpdate("insert into add_details"+"values(first_name,Last_name,status,age,sex,state,status)");
 				 preparedStmt.execute();
 				System.out.println("Successfully inserted");
 				request.getRequestDispatcher("Home.jsp").forward(request, response);
 			} catch (SQLException e) {
-				
-				
-				
+					
 			}}
 			else if("Display Profile".equals(request.getParameter("Display Profile")))
 			{
@@ -154,9 +144,7 @@ public class HomeServlet extends HttpServlet {
 				rs = preparedStmt.executeQuery();
 			} catch (SQLException e2) {
 				
-				
 			}
-			
 			try {
 				rs = stmt.executeQuery(query);
 			} catch (SQLException e1) {
@@ -170,8 +158,7 @@ public class HomeServlet extends HttpServlet {
 					String Status1=rs.getString("status");
 					int Age1=rs.getInt("age");
 					String Sex1=rs.getString("sex");
-					String State1=rs.getString("state");
-					
+					String State1=rs.getString("state");		
 					 System.out.print("Firts Name: " + F_Name);
 			         System.out.print(", Last Name: " + L_Name);
 			         System.out.print(", Status: " + Status1);
@@ -182,11 +169,8 @@ public class HomeServlet extends HttpServlet {
 			} catch (SQLException e) {
 				
 			}
-			
 			}
-		
 		// ADD FRIEND BUTTON FUNCTIONALITY
-
 			else if("Add Friend".equals(request.getParameter("Add Friend")))
 			{
 				int age1 =0;
@@ -210,7 +194,6 @@ public class HomeServlet extends HttpServlet {
 				}
 				try {
 					rs = stmt.executeQuery(query);
-					
 				}
 				catch (SQLException e2) {
 					
@@ -227,18 +210,14 @@ public class HomeServlet extends HttpServlet {
 					 try {
 							PreparedStatement preparedStmt1 = con.prepareStatement(query1);
 							preparedStmt1.setString(1, person2);
-							rs1 = preparedStmt1.executeQuery();
-							
+							rs1 = preparedStmt1.executeQuery();	
 						}
 						catch (SQLException e2) {
-							
 						}
 						try {
 							rs1 = stmt.executeQuery(query1);
-							
 						}
 						catch (SQLException e2) {
-							
 						}
 							 try {
 								 while(rs1.next()) {
@@ -246,11 +225,8 @@ public class HomeServlet extends HttpServlet {
 								 }
 								
 							} catch (SQLException e) {
-								
 							}
 					 System.out.println(age2);
-					
-					 
 					 if(age1<=2||age2<=2)
 						{
 								System.out.println(age2);
@@ -259,7 +235,6 @@ public class HomeServlet extends HttpServlet {
 								} catch (TooYoungException e) {
 									e.printStackTrace();
 								}
-						
 						}
 							else if(((age1<=16 && age2>=17)||(age1>=17 && age2<=16)))
 							{
@@ -283,8 +258,6 @@ public class HomeServlet extends HttpServlet {
 							else
 							{
 								String query2="insert into friends(friend1,friend2)"+" values(?,?)";
-								
-								
 								try {
 									PreparedStatement preparedStmt = con.prepareStatement(query2);
 									preparedStmt.setString (1,person1 );
@@ -312,25 +285,19 @@ try {
 	PreparedStatement preparedStmt = con.prepareStatement(query);
 	preparedStmt.setString(1, Couple1_name);
 	rs = preparedStmt.executeQuery();
-	
 }
-catch (SQLException e2) {
-	
+catch (SQLException e2) {	
 }
 try {
-	rs = stmt.executeQuery(query);
-	
+	rs = stmt.executeQuery(query);	
 }
 catch (SQLException e2) {
-	
 }
 	 try {
 		 while(rs.next()) {
 		age1=rs.getInt("age");
-		 }
-		
-	} catch (SQLException e) {
-		
+		 }	
+	} catch (SQLException e) {	
 	}
 	// System.out.println(age1);
 	 try {
@@ -697,6 +664,73 @@ catch (SQLException e2) {
 									}
 							 }
 			}
+			else if("Child Name".equals(request.getParameter("Child Name")))
+			{
+				String query="select Child_name from Parent where Father_name = ? and Mother_name = ?";
+				String Fathername=request.getParameter("Fathername");
+				String Mothername=request.getParameter("Mothername");
+				ResultSet rs=null;
+				String Childname=null;
+				try {
+					PreparedStatement preparedStmt = con.prepareStatement(query);
+					preparedStmt.setString(1, Fathername);
+					preparedStmt.setString(2, Mothername);
+					rs= preparedStmt.executeQuery();
+					
+				}
+				catch (SQLException e2) {
+				}
+				try {
+					rs = stmt.executeQuery(query);
+				}
+				catch (SQLException e2) {
+					
+				}
+					 try {
+						 while(rs.next()) {
+						Childname=rs.getString("Child_name");
+						System.out.println(Childname);
+						 }
+						
+					} catch (SQLException e) {
+						System.out.println("Error");
+					}
+					 
+			}
+			else if("Parent Name".equals(request.getParameter("Parent Name")))
+			{
+				String query="select Father_name,Mother_name from Parent where Child_name = ? ";
+				String Childname=request.getParameter("ChildName");
+				ResultSet rs=null;
+				String Fathername=null;
+				String Mothername=null;
+				try {
+					PreparedStatement preparedStmt = con.prepareStatement(query);
+					preparedStmt.setString(1, Childname);
+					rs= preparedStmt.executeQuery();
+					
+				}
+				catch (SQLException e2) {
+				}
+				try {
+					rs = stmt.executeQuery(query);
+				}
+				catch (SQLException e2) {
+					
+				}
+					 try {
+						 while(rs.next()) {
+						Fathername=rs.getString("Father_name");
+						Mothername=rs.getString("Mother_name");
+						System.out.println(Fathername);
+						System.out.println(Mothername);
+						 }
+						
+					} catch (SQLException e) {
+						System.out.println("Error");
+					}
+					 
+			}
 				
 				}
 				
@@ -705,6 +739,5 @@ catch (SQLException e2) {
 	}
 		
 	
-
 
 

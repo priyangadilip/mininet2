@@ -56,6 +56,7 @@ public class HomeServlet extends HttpServlet {
 		Scanner sc=new Scanner(System.in);
 		String home_Page="Home.jsp";
 		
+		//-------------------------------> DataBase Connection
 			try{  
 				Class.forName("com.mysql.cj.jdbc.Driver");  
 				 con=DriverManager.getConnection(  
@@ -65,7 +66,8 @@ public class HomeServlet extends HttpServlet {
 				 System.out.println("Successfull DB connection");	 
 				 }
 			catch(Exception e){ System.out.println(e);} 
-	//ADD PERSON BUTTON FUNCTIONALITY		
+			
+	//-------------------> ADD PERSON BUTTON FUNCTIONALITY		
 		
 		if("Add Person".equals(request.getParameter("Add Person")))
 		{
@@ -155,22 +157,26 @@ public class HomeServlet extends HttpServlet {
 				{
 					String F_Name=rs.getString("fname");
 					String L_Name=rs.getString("lname");
-					String Status1=rs.getString("status");
+					String Status1=rs.getString("CurrentStatus");
 					int Age1=rs.getInt("age");
 					String Sex1=rs.getString("sex");
 					String State1=rs.getString("state");		
 					 System.out.print("Firts Name: " + F_Name);
-			         System.out.print(", Last Name: " + L_Name);
-			         System.out.print(", Status: " + Status1);
-			         System.out.println(", Age: " + Age1);
-			         System.out.println(", Sex: " + Sex1);
-			         System.out.println(", State: " + State1);
+					 System.out.println();
+			         System.out.print("Last Name: " + L_Name);
+			         System.out.println();
+			         System.out.print("Status: " + Status1);
+			         System.out.println();
+			         System.out.println("Age: " + Age1);
+			         System.out.println("Sex: " + Sex1);
+			         System.out.println("State: " + State1);
+			         request.getRequestDispatcher("Home.jsp").forward(request, response);
 				}
 			} catch (SQLException e) {
 				
 			}
 			}
-		// ADD FRIEND BUTTON FUNCTIONALITY
+		//----------------------------> ADD FRIEND BUTTON FUNCTIONALITY
 			else if("Add Friend".equals(request.getParameter("Add Friend")))
 			{
 				int age1 =0;
@@ -232,6 +238,7 @@ public class HomeServlet extends HttpServlet {
 								System.out.println(age2);
 								try {
 									throw new TooYoungException("Too Young to be friends");
+									
 								} catch (TooYoungException e) {
 									e.printStackTrace();
 								}
@@ -263,13 +270,14 @@ public class HomeServlet extends HttpServlet {
 									preparedStmt.setString (1,person1 );
 									preparedStmt.setString (2,person2 );
 									 preparedStmt.execute();
+									 request.getRequestDispatcher("Home.jsp").forward(request, response);
 								} catch (SQLException e) {
 									
 								}
 							}
 				}
 		
-		// ADD RELATION --> ADD COUPLE BUTTON FUNCTIONALITY
+		//----------------------->  ADD RELATION --> ADD COUPLE BUTTON FUNCTIONALITY
 		
 			else	if("Add Couple".equals(request.getParameter("Add Couple")))
 		{
@@ -407,11 +415,15 @@ catch (SQLException e2) {
 						preparedStmt.setString (2,Couple2_name );
 						 preparedStmt.execute();
 						 System.out.println(Couple1_name +" " + "and" + " " + Couple2_name + "are now couple");
+						 request.getRequestDispatcher("Home.jsp").forward(request, response);
 					} catch (SQLException e) {
 						
 					}
 				}
 			 }}
+		
+		//----------------------------> Add Parent Functionality 
+		
 			else if("Add Parent".equals(request.getParameter("Add Parent")))
 			{
 				String Childname=request.getParameter("Child_fname");
@@ -493,11 +505,14 @@ catch (SQLException e2) {
 											preparedStmt.setString (3,Mothername );
 											 preparedStmt.execute();
 											 System.out.println("Parents added successfully !!");
+											 request.getRequestDispatcher("Home.jsp").forward(request, response);
 										} catch (SQLException e) {
 											
 										}
 									}
 								 }
+		//------------------------------------> Add Classmate Functionality 
+		
 			else if("Add Classmate".equals(request.getParameter("Add Classmate")))
 			{
 				ResultSet rs=null;
@@ -575,6 +590,7 @@ catch (SQLException e2) {
 										preparedStmt.setString (2,classmate2 );
 										 preparedStmt.execute();
 										 System.out.println("classmates added successfully !!");
+										 request.getRequestDispatcher("Home.jsp").forward(request, response);
 									} catch (SQLException e) {
 										
 									}
@@ -582,6 +598,8 @@ catch (SQLException e2) {
 				
 			}
 			
+		 //--------------------------> Add Colleague Functionality
+		
 			else if("Add Colleague".equals(request.getParameter("Add Colleague")))
 			{
 				ResultSet rs=null;
@@ -659,11 +677,13 @@ catch (SQLException e2) {
 										preparedStmt.setString (2,colleague2 );
 										 preparedStmt.execute();
 										 System.out.println("colleagues added successfully !!");
+										 request.getRequestDispatcher("Home.jsp").forward(request, response);
 									} catch (SQLException e) {
 										
 									}
 							 }
 			}
+		//------------------------------> Find out Child name
 			else if("Child Name".equals(request.getParameter("Child Name")))
 			{
 				String query="select Child_name from Parent where Father_name = ? and Mother_name = ?";
@@ -690,6 +710,7 @@ catch (SQLException e2) {
 						 while(rs.next()) {
 						Childname=rs.getString("Child_name");
 						System.out.println(Childname);
+						request.getRequestDispatcher("Home.jsp").forward(request, response);
 						 }
 						
 					} catch (SQLException e) {
@@ -697,6 +718,7 @@ catch (SQLException e2) {
 					}
 					 
 			}
+		//-----------------------------> Find out Parent name
 			else if("Parent Name".equals(request.getParameter("Parent Name")))
 			{
 				String query="select Father_name,Mother_name from Parent where Child_name = ? ";
@@ -724,12 +746,70 @@ catch (SQLException e2) {
 						Mothername=rs.getString("Mother_name");
 						System.out.println(Fathername);
 						System.out.println(Mothername);
+						request.getRequestDispatcher("Home.jsp").forward(request, response);
 						 }
 						
 					} catch (SQLException e) {
 						System.out.println("Error");
 					}
 					 
+			}
+		//--------------------------------> Check Mutual Friend(Bonus)
+			else if("Check_Mutual_Friend".equals(request.getParameter("Check_Mutual_Friend")))
+		{
+			String Person_name=request.getParameter("Person_name");
+			String Friend_name=request.getParameter("Friend_name");
+			String query="select friend2 from friends where friend1= ? ";
+			ResultSet rs=null;
+			String Mutual_Friend;
+			try {
+				PreparedStatement preparedStmt = con.prepareStatement(query);
+				preparedStmt.setString(1, Friend_name);
+				rs= preparedStmt.executeQuery();
+				
+			}
+			catch (SQLException e2) {
+			}
+			try {
+				rs = stmt.executeQuery(query);
+			}
+			catch (SQLException e2) {
+				
+			}
+				 try {
+					 while(rs.next()) {
+					Mutual_Friend=rs.getString("friend2");
+					System.out.println("Mutual Friend of"+" "+Person_name+" "+"is"+" "+Mutual_Friend);
+					request.getRequestDispatcher("Home.jsp").forward(request, response);
+					 }
+					
+				} catch (SQLException e) {
+					System.out.println("Error");
+				}
+			
+		}
+		
+		//------------------------------> Delete Person Functionality 
+		
+			else if("Delete Person".equals(request.getParameter("Delete Person")))
+			{
+				String person_name=request.getParameter("person_name");
+				String query="delete * from add_person where fname=?";
+				ResultSet rs=null;
+				try {
+					PreparedStatement preparedStmt = con.prepareStatement(query);
+					preparedStmt.setString(1, person_name);
+					rs= preparedStmt.executeQuery();
+					
+				}
+				catch (SQLException e2) {
+				}
+				try {
+					rs = stmt.executeQuery(query);
+				}
+				catch (SQLException e2) {
+					
+				}
 			}
 				
 				}

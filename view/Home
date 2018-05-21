@@ -7,7 +7,7 @@
 <title>Welcome to MiniNet !!</title>
 </head>
 <body>
-<form action="HomeServlet" method="Post">
+<form action="Mininet" method="Post">
 MiniNet Menu Options :
 <br><br><input type="submit" name="Add Person" value="Add Person">
 <br><br><input type="submit" name="Display Profile" value="Display Profile">

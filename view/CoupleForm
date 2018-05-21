@@ -5,7 +5,7 @@
 <title>Couple Details Form</title>
 </head>
 <body>
-<form action="HomeServlet" method="Post">
+<form action="Mininet" method="Post">
 <br><br>Enter the first name of the Partner1(Male):<input type="text" name="Couple1_fname">
 <br><br>Enter the first name of the Partner2(Female):<input type="text" name="Couple2_fname">
 <br><br><input type="submit" name="Add Couple" value="Add Couple">

@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<form action="HomeServlet" method="Post">
+<form action="Mininet" method="Post">
 <br><br>Enter Father first name : <input type="text" name="Fathername">
 <br><br>Enter Mother first name : <input type="text" name="Mothername">
 <br><br><input type="submit" name="Child Name" value="Child Name">

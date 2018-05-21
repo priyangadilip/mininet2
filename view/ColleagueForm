@@ -5,7 +5,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<form action="HomeServlet" method="Post">
+<form action="Mininet" method="Post">
 <br><br>Enter the first name of the Colleague1:<input type="text" name="Colleague1">
 <br><br>Enter the first name of the Colleague2:<input type="text" name="Colleague2">
 <br><br><input type="submit" name="Add Colleague" value="Add Colleague">

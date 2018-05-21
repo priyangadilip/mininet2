@@ -5,7 +5,7 @@
 <title>Parents Details Form</title>
 </head>
 <body>
-<form action="HomeServlet" method="Post">
+<form action="Mininet" method="Post">
 <br><br>Enter the child's first name whose parents details are to be added:<input type="text" name="Child_fname">
 <br><br>Enter the first name of the Father:<input type="text" name="Father_fname">
 <br><br>Enter the first name of the Mother:<input type="text" name="Mother_fname">

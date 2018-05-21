@@ -25,16 +25,16 @@ import exceptions.NotToBeFriendsException;
 import exceptions.TooYoungException;
 
 /**
- * Servlet implementation class HomeServlet
+ * Servlet implementation class Mininet
  */
-@WebServlet("/HomeServlet")
-public class HomeServlet extends HttpServlet {
+@WebServlet("/Mininet")
+public class Mininet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public HomeServlet() {
+    public Mininet() {
         super();
         // TODO Auto-generated constructor stub
     }

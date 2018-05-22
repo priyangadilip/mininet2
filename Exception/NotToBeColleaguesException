@@ -1,3 +1,6 @@
+/*
+Author name : Priyanga Dhilip Kumar(s3670781)
+*/
 package exceptions;
 
 public class NotToBeColleaguesException extends Exception{

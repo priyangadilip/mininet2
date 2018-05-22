@@ -1,0 +1,53 @@
+package junitwebapp;
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.Before;
+
+import static net.sourceforge.jwebunit.junit.JWebUnit.assertLinkPresent;
+import static net.sourceforge.jwebunit.junit.JWebUnit.assertTitleEquals;
+import static net.sourceforge.jwebunit.junit.JWebUnit.beginAt;
+import static net.sourceforge.jwebunit.junit.JWebUnit.clickLink;
+import static net.sourceforge.jwebunit.junit.JWebUnit.setBaseUrl;
+import static net.sourceforge.jwebunit.junit.JWebUnit.setTestingEngineKey;
+
+
+import org.junit.jupiter.api.Test;
+
+import net.sourceforge.jwebunit.util.TestingEngineRegistry;
+
+class TestClass {
+
+	@Before
+
+    public void prepare() {
+
+        setTestingEngineKey(TestingEngineRegistry.TESTING_ENGINE_HTMLUNIT); 
+
+        setBaseUrl("http://localhost:8081/junitwebapp");
+
+    }
+	@Test
+	void test() {
+		fail("Not yet implemented");
+	}
+	@Test
+	
+
+	
+	    public void testLoginPage() {
+	
+	        beginAt("Home.jsp"); 
+	
+	        assertTitleEquals("Welcome to MiniNet !!");
+	
+	        assertLinkPresent("Relation");
+	
+	        clickLink("Add Relation");
+	
+	        assertTitleEquals("Relation");
+	
+	    }
+
+	
+
+}

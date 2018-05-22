@@ -1,3 +1,8 @@
+/* 
+ * 
+ *     Author : Priyanga Dhilip Kumar (s3670781)
+ */
+
 package javagui;
 import java.io.IOException;
 import java.sql.Connection;
@@ -72,7 +77,7 @@ public class Mininet extends HttpServlet {
 		if("Add Person".equals(request.getParameter("Add Person")))
 		{
 			
-			List<String> names=new ArrayList<String>();
+			List<String> names=new ArrayList<String>();// Use of list for retrieving data
 			List<Integer> age1=new ArrayList<Integer>();
 			System.out.println("Enter First name");
 			String f_name=sc.next();
@@ -83,6 +88,8 @@ public class Mininet extends HttpServlet {
 			System.out.println("Enter your status");
 			String status=sc.next();
 			names.add(status);
+			System.out.println("Upload your profile picture");
+			String img=sc.next();
 			System.out.println();
 			System.out.println("Enter your age");
 			int age=sc.nextInt();
@@ -134,6 +141,8 @@ public class Mininet extends HttpServlet {
 			} catch (SQLException e) {
 					
 			}}
+		
+		//-------------------------------> Display Profile Functionality
 			else if("Display Profile".equals(request.getParameter("Display Profile")))
 			{
 				ResultSet rs=null;
@@ -212,7 +221,6 @@ public class Mininet extends HttpServlet {
 					} catch (SQLException e) {
 						
 					}
-					 System.out.println(age1);
 					 try {
 							PreparedStatement preparedStmt1 = con.prepareStatement(query1);
 							preparedStmt1.setString(1, person2);
@@ -232,7 +240,6 @@ public class Mininet extends HttpServlet {
 								
 							} catch (SQLException e) {
 							}
-					 System.out.println(age2);
 					 if(age1<=2||age2<=2)
 						{
 								System.out.println(age2);
@@ -241,6 +248,7 @@ public class Mininet extends HttpServlet {
 									
 								} catch (TooYoungException e) {
 									e.printStackTrace();
+									request.getRequestDispatcher("Home.jsp").forward(request, response);
 								}
 						}
 							else if(((age1<=16 && age2>=17)||(age1>=17 && age2<=16)))
@@ -249,6 +257,7 @@ public class Mininet extends HttpServlet {
 									throw new NotToBeFriendsException("One is an adult therfore Should not be Friends !");
 								} catch (NotToBeFriendsException e) {
 									e.printStackTrace();
+									request.getRequestDispatcher("Home.jsp").forward(request, response);
 								}
 							}
 							else if(age1<=16&&age2<=16)
@@ -259,6 +268,7 @@ public class Mininet extends HttpServlet {
 										throw new NotToBeFriendsException("Age difference is more than 3 therfore Should not be Friends !");
 									} catch (NotToBeFriendsException e) {
 										e.printStackTrace();
+										request.getRequestDispatcher("Home.jsp").forward(request, response);
 									}
 								}
 							}
@@ -276,7 +286,6 @@ public class Mininet extends HttpServlet {
 								}
 							}
 				}
-		
 		//----------------------->  ADD RELATION --> ADD COUPLE BUTTON FUNCTIONALITY
 		
 			else	if("Add Couple".equals(request.getParameter("Add Couple")))
@@ -338,6 +347,7 @@ catch (SQLException e2) {
 				throw new NotToBeCoupledException("One of the person is not an adult and cannot be a couple !!");
 			} catch (NotToBeCoupledException e) {
 				e.printStackTrace();
+				request.getRequestDispatcher("Home.jsp").forward(request, response);
 			}
 	 }
 	 else {
@@ -401,6 +411,7 @@ catch (SQLException e2) {
 						throw new NoAvailableException("One of the person is already coupled with someone else !!");
 					} catch (NoAvailableException e) {
 						e.printStackTrace();
+						request.getRequestDispatcher("Home.jsp").forward(request, response);
 					}
 			
 	 }
@@ -490,6 +501,7 @@ catch (SQLException e2) {
 											throw new NoParentException(Childname+" "+ "has either one or no parent!!");
 										} catch (NoParentException e) {
 											e.printStackTrace();
+											request.getRequestDispatcher("Home.jsp").forward(request, response);
 										}
 								
 						 }
@@ -577,6 +589,7 @@ catch (SQLException e2) {
 										throw new NotToBeClassmatesException("One of the person is a young child and therfore cannot be classmates !!");
 									} catch (NotToBeClassmatesException e) {
 										e.printStackTrace();
+										request.getRequestDispatcher("Home.jsp").forward(request, response);
 									}
 							 }
 							 else
@@ -664,6 +677,7 @@ catch (SQLException e2) {
 										throw new NotToBeColleaguesException("One of the person is a child and therfore cannot be classmates !!");
 									} catch (NotToBeColleaguesException e) {
 										e.printStackTrace();
+										request.getRequestDispatcher("Home.jsp").forward(request, response);
 									}
 							 }
 							 else
@@ -817,7 +831,6 @@ catch (SQLException e2) {
 			
 		
 	}
-		
 	
 
 
